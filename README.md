@@ -34,3 +34,17 @@ We kept those tables but now, they only contains a primary key for their ID, a f
 
 This is also safer, because we can't add someone into the `staff` table for example if they are not into the `employee_data` table.\
 Another use of foreign keys that wasn't possible with the old schema, in the `tournament` table, we can only add a tournament with a place in the `place` table.
+
+
+## How to run
+
+You need to have sqlite3 installed.\
+
+In the same directory of the old database, in a terminal run this command to create an empty database\
+```sqlite3 newdb.db "VACUUM;"```
+
+Run this command to initialize the new database with the new schema\
+```sqlite3 newdb.db < db_init.sql```
+
+And then run this command to migrate data from the old database to the new one\
+```sqlite3 tpb2.db < migrate.sql```
