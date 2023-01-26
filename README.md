@@ -32,9 +32,8 @@ For example, the `tournament` table contains informations about the place where 
 An other is example is the `staff`, `player` and `coach` table. They look pretty much the same, and all those people are employees. So we created a new table `employee_data` where we store all the common data instead of putting them in the `staff`, `player` and `coach` tables.
 We kept those tables but now, they only contains a primary key for their ID, a foreign key for their employee ID, and specific data if needed, like `ranking` or `game` for players.
 
-This is also safer, because we can't add someone into the `staff` table for example if they are not into the `employee_data` table.\
-Another use of foreign keys that wasn't possible with the old schema, in the `tournament` table, we can only add a tournament with a place in the `place` table.
-
+This is also safer, because we can't add someone into the `staff` table for example if they are not into the `employee_data` table because of the use of foreign keys.\
+Another use of foreign keys which was not possible with the old schema, in the new `tournament` table we can only add a tournament with a place which is in the `place` table because we are using the `place` primary key as a foreign key in the `tournament` table. So inserting a new tournament with an `IdPlace` that does not exist will result in an error and the tournament will not be inserted because it does not meet the foreign key constraint
 
 ## How to run
 
