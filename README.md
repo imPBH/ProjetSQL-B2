@@ -67,3 +67,7 @@ Here is an exemple of a table which uses a foreign key\
 The first column is `Idstaff`, this is the primary key of the table, we want it to be autoincremented so we dont have to specify the ID each time we add a new staff, and this column can't be null.\
 We define `IdEmployeeData` as an integer that can't be null because this will be our foreign key to the `employee_data` table.\
 And then we say that `IdEmployeeData` is a foreign key, and it is a reference of `IdEmployee` in the `employee_data` table.
+
+We can use multiple foreign keys in a table\
+![tournament definition](https://user-images.githubusercontent.com/59230262/214822710-d283183e-926b-4a9f-9eec-a2d4f187d479.png)
+
