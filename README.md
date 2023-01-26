@@ -71,3 +71,5 @@ And then we say that `IdEmployeeData` is a foreign key, and it is a reference of
 We can use multiple foreign keys in a table\
 ![tournament definition](https://user-images.githubusercontent.com/59230262/214822710-d283183e-926b-4a9f-9eec-a2d4f187d479.png)
 
+### Migration script
+TODO
