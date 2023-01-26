@@ -38,7 +38,7 @@ Another use of foreign keys that wasn't possible with the old schema, in the `to
 
 ## How to run
 
-You need to have sqlite3 installed.\
+You need to have sqlite3 installed.
 
 In the same directory of the old database, in a terminal run this command to create an empty database\
 ```sqlite3 newdb.db "VACUUM;"```
@@ -48,3 +48,22 @@ Run this command to initialize the new database with the new schema\
 
 And then run this command to migrate data from the old database to the new one\
 ```sqlite3 tpb2.db < migrate.sql```
+
+## Explanations
+### Initialization script
+In this sqlite script, we initialize the new database with the new schema.\
+We create all the tables, all the columns and their type.
+
+Here is an exemple of a simple table with a primary key\
+![employee_data definition](https://user-images.githubusercontent.com/59230262/214820520-f8041c27-b12a-405d-8c39-d7272231de2f.png)
+
+The first column is `IdEmployee`, this is the primary key of the table, we want it to be autoincremented so we dont have to specify the ID each time we add a new employee, and this column can't be null.\
+For `Lastname`, `Firstname` and `Gender`, they are strings with a limit of 30 chars.\
+The `Age` and `Wage` columns are integer numbers.
+
+Here is an exemple of a table which uses a foreign key\
+![staff definition](https://user-images.githubusercontent.com/59230262/214821632-301df8a4-0df9-4694-bf59-bd7fde4f7d49.png)
+
+The first column is `Idstaff`, this is the primary key of the table, we want it to be autoincremented so we dont have to specify the ID each time we add a new staff, and this column can't be null.\
+We define `IdEmployeeData` as an integer that can't be null because this will be our foreign key to the `employee_data` table.\
+And then we say that `IdEmployeeData` is a foreign key, and it is a reference of `IdEmployee` in the `employee_data` table.
