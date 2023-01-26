@@ -1,0 +1,61 @@
+CREATE TABLE IF NOT EXISTS "employee_data"
+(
+    IdEmployee INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    Lastname VARCHAR2(30),
+    Firstname VARCHAR2(30),
+    Gender VARCHAR2(30),
+    Age INT,
+    Wage INT
+);
+
+CREATE TABLE IF NOT EXISTS "staff"
+(
+    IdStaff INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    IdEmployeeData INTEGER NOT NULL,
+    FOREIGN KEY(IdEmployeeData) REFERENCES employee_data(IdEmployee)
+);
+
+CREATE TABLE IF NOT EXISTS "game"
+(
+    IdGame INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    Name VARCHAR2(30)
+);
+
+CREATE TABLE IF NOT EXISTS "player"
+(
+    IdPlayer INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    IdGame INTEGER NOT NULL,
+    Ranking INTEGER,
+    IdEmployeeData INTEGER NOT NULL,
+    FOREIGN KEY(IdGame) REFERENCES game(IdGame),
+    FOREIGN KEY(IdEmployeeData) REFERENCES employee_data(IdEmployee)
+);
+
+CREATE TABLE IF NOT EXISTS "coach"
+(
+    IdCoach INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    IdGame INTEGER NOT NULL,
+    LicenseDate VARCHAR2(30),
+    IdEmployeeData INTEGER NOT NULL,
+    FOREIGN KEY(IdGame) REFERENCES game(IdGame),
+    FOREIGN KEY(IdEmployeeData) REFERENCES employee_data(IdEmployee)
+);
+
+CREATE TABLE IF NOT EXISTS "place"
+(
+    IdPlace INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    Name VARCHAR2(30),
+    Address VARCHAR2(30),
+    City VARCHAR2(30)
+);
+
+CREATE TABLE IF NOT EXISTS "tournament"
+(
+    IdTournament INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    IdPlace INTEGER NOT NULL,
+    IdGame INTEGER NOT NULL,
+    Date VARCHAR2(30) NOT NULL,
+    Duration INTEGER,
+    FOREIGN KEY(IdPlace) REFERENCES place(IdPlace),
+    FOREIGN KEY(IdGame) REFERENCES game(IdGame)
+);
