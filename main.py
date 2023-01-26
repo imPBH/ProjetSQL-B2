@@ -12,12 +12,13 @@ def get_games(context):
 
     res = context.execute(query)
     games = []
+    # add all games into the games list
     for result in res:
         games.append(result[0])
     return games
 
  
-def get_game_by_id(context, id):
+def get_game_name_by_id(context, id):
     '''Return the name of a game by a given id'''
 
     query = """
@@ -30,8 +31,9 @@ def get_game_by_id(context, id):
 
     par = {"id": id}
     res = context.execute(query, par)
-    game = res.fetchone()[0]
-    return game
+    # retrieve the name of the game
+    game_name = res.fetchone()[0]
+    return game_name
 
 
 def get_places(context):
@@ -71,6 +73,7 @@ def choose_game(context):
     games = get_games(context)
     try:
         print("Choose a game:\n")
+        # print each game and his index one by one
         for index, game in enumerate(games):
             print(f"{index}. {game}")
         choice = int(input("\nYour choice: "))
@@ -78,7 +81,6 @@ def choose_game(context):
         # If user doesn't enter a number, prints an error message and returns none
         print("Please enter a valid number\n")
         return None
-
     try:
         return games[choice]
     except IndexError:
@@ -91,9 +93,9 @@ def print_all_tournaments_for_game(context):
     '''Print every tournament for a given game name'''
 
     # Have the user choose a game 
-    game = None
-    while game == None:
-        game = choose_game(context)
+    game_name = None
+    while game_name == None:
+        game_name = choose_game(context)
 
     query = """
     SELECT 
@@ -107,17 +109,18 @@ def print_all_tournaments_for_game(context):
       INNER JOIN game on game.IdGame = tournament.IdGame 
       INNER JOIN place on place.IdPlace = tournament.IdPlace 
     WHERE 
-      game.Name = :game"""
+      game.Name = :game_name"""
 
-    par = {"game": game}
+    par = {"game_name": game_name}
     res = context.execute(query, par)
     tournaments = res.fetchall()
 
     if len(tournaments) == 0:
-        print(f"There is no tournaments for {game}")
+        print(f"There is no tournaments for {game_name}")
         return
 
-    print(f"\nAll tournaments for {game} :")
+    print(f"\nAll tournaments for {game_name} :")
+    # Print each tournament one by one
     for tournament in tournaments:
         print(
             f"Date: {tournament[0]} | Place: {tournament[1]}, {tournament[2]}, {tournament[3]} | Duration: {tournament[4]}"
@@ -128,9 +131,9 @@ def print_average_wage_for_game(context):
     '''Given a game name, print the average wage of the players'''
 
     # Have the user choose a game 
-    game = None
-    while game == None:
-        game = choose_game(context)
+    game_name = None
+    while game_name == None:
+        game_name = choose_game(context)
 
     query = """
     SELECT 
@@ -140,26 +143,28 @@ def print_average_wage_for_game(context):
       INNER JOIN employee_data ON employee_data.IdEmployee = player.IdEmployeeData 
       INNER JOIN game ON game.IdGame = player.IdGame 
     WHERE 
-      game.Name = :game"""
+      game.Name = :game_name"""
 
-    par = {"game": game}
+    par = {"game_name": game_name}
     res = context.execute(query, par)
     average_wage = res.fetchall()[0][0]
-    print(f"The average wage for {game} players is: ${average_wage}")
+    print(f"The average wage for {game_name} players is: ${average_wage}")
 
 
 def print_tournaments_by_places(context):
     '''Print all tournaments by place'''
 
     places = get_places(context)
+    # Get all tournaments for a place, place by place
     for place in places:
         print(f"All tournaments for {place[1]}: {place[2]}, {place[3]}")
         tournaments = get_tournaments_by_place(context, place)
+        # Print each tournament one by one
         for tournament in tournaments:
-            game = get_game_by_id(context, tournament[2])
+            game_name = get_game_name_by_id(context, tournament[2])
             date = tournament[3]
             duration = tournament[4]
-            print(f"Game: {game} | Date: {date} | Duration: {duration}")
+            print(f"Game: {game_name} | Date: {date} | Duration: {duration}")
         print()
 
 
@@ -178,6 +183,7 @@ def print_number_of_players_by_gender(context):
 
     res = context.execute(query)
     genders = res.fetchall()
+    # Print each gender and his number of players one by one
     for gender in genders:
         print(f"Total of {gender[0]}: {gender[1]}")
 
