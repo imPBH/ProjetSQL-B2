@@ -3,7 +3,8 @@ This repo is the final project of a SQL course.
 
 ## Subject
 
-The given subject was :
+The given subject was:
+
 
 You’ve been contacted by TeamLikwid to migrate their old database to their new schema.
 They want you to:
@@ -27,12 +28,12 @@ Here is the new schema
 ## Why did it have to be changed ?
 
 The old database schema wasn't well structured.\
-For example, the `tournament` table contains informations about the place where it is happening, but these informations aren't related to a tournament, they are related to a place, that's why we created a new `place` table in the new schema.
+For example, the `tournament` table contains information about the place where it is happening, but this information isn't related to a tournament, it relates to a place, that's why we created a new `place` table in the new schema.
 
-An other is example is the `staff`, `player` and `coach` table. They look pretty much the same, and all those people are employees. So we created a new table `employee_data` where we store all the common data instead of putting them in the `staff`, `player` and `coach` tables.
-We kept those tables but now, they only contains a primary key for their ID, a foreign key for their employee ID, and specific data if needed, like `ranking` or `game` for players.
+Another example is the `staff`, `player` and `coach` table. They look pretty much the same, and all those people are employees. So we created a new table `employee_data` where we store all the common data instead of putting them in the `staff`, `player` and `coach` tables.
+We kept those tables, but now, they only contain a primary key for their ID, a foreign key for their employee ID, and specific data if needed, like `ranking` or `game` for players.
 
-This is also safer, because we can't add someone into the `staff` table for example if they are not into the `employee_data` table because of the use of foreign keys.\
+This is also safer, because we can't add anyone into the `staff` table for if they are not in the `employee_data` table because of the use of foreign keys.\
 Another use of foreign keys which was not possible with the old schema, in the new `tournament` table we can only add a tournament with a place which is in the `place` table because we are using the `place` primary key as a foreign key in the `tournament` table. So inserting a new tournament with an `IdPlace` that does not exist will result in an error and the tournament will not be inserted because it does not meet the foreign key constraint
 
 ## How to run
@@ -63,7 +64,7 @@ or\
 In this sqlite script, we initialize the new database with the new schema.\
 We create all the tables, all the columns and their type.
 
-Here is an exemple of a simple table with a primary key
+Here is an example of a simple table with a primary key
 ```SQL
 CREATE TABLE IF NOT EXISTS "employee_data"
 (
@@ -80,7 +81,7 @@ The first column is `IdEmployee`, this is the primary key of the table, we want 
 For `Lastname`, `Firstname` and `Gender`, they are strings with a limit of 30 chars.\
 The `Age` and `Wage` columns are integer numbers.
 
-Here is an exemple of a table which uses a foreign key
+Here is an example of a table which uses a foreign key
 ```SQL
 CREATE TABLE IF NOT EXISTS "staff"
 (
@@ -90,7 +91,7 @@ CREATE TABLE IF NOT EXISTS "staff"
 );
 ```
 
-The first column is `Idstaff`, this is the primary key of the table, we want it to be autoincremented so we dont have to specify the ID each time we add a new staff, and this column can't be null.\
+The first column is `Idstaff`, this is the primary key of the table, we want it to be autoincremented so we don't have to specify the ID each time we add a new staff, and this column can't be null.\
 We define `IdEmployeeData` as an integer that can't be null because this will be our foreign key to the `employee_data` table.\
 And then we say that `IdEmployeeData` is a foreign key, and it is a reference of `IdEmployee` in the `employee_data` table.
 
@@ -109,9 +110,9 @@ CREATE TABLE IF NOT EXISTS "tournament"
 ```
 
 ### Migration script
-In this sqlite script, we transfert data from the old database to the new one while respecting the new schema.
+In this sqlite script, we transfer data from the old database to the new one while respecting the new schema.
 
-We start the script by indicating that we are starting a new transaction with the "BEGIN" command, we declare which tables we use and how we call them.
+We start the script indicating that we are starting a new transaction with the `BEGIN` command, we declare which tables we use and how we call them.
 ```SQL
 BEGIN;
 
@@ -119,7 +120,7 @@ ATTACH DATABASE 'tpb2.db' AS old;
 ATTACH DATABASE 'newdb.db' AS new;
 ```
 
-Now we can start the migration. We should keep in mind that the order is very important here ! That's why we migrate data into tables that don't need foreign key.\
+Now we can start the migration. We should keep in mind that the order is very important here! That's why we migrate data into tables that don't need foreign key.\
 So we start by inserting data into the `employee_data` table.
 ```SQL
 INSERT INTO new.employee_data (Lastname, Firstname, Gender, Age, Wage) 
@@ -134,9 +135,9 @@ FROM
  ```
  
 This one is pretty simple because all the data we need is available in the `staff` table in the old database. So we just retrieve all the data we need and insert them into our `employee_data` table in the new database.
-We also do the same request for the `player` and `coach` tables in the old database because the `employee_data` need to contains all the data about all the employees, so we put everybody in this table.
+We also make the same request for the `player` and `coach` tables in the old database because the `employee_data` need to contain all the data about all the employees, so we put everybody in this table.
 
-Another table that doesn't use foreign keys is the `game` table. This one is actually the same as in the old database, it only contains an ID as a primary key and the name of the game. So we just need to retrieve the name into the old database and insert it into the new one, we don't need to retrieve the ID because it will be autoincremented.
+Another table that doesn't use foreign keys is the `game` table. This one is actually the same as in the old database, it only contains an ID as a primary key and the name of the game. So, we just need to retrieve the name into the old database and insert it into the new one, we don't need to retrieve the ID because it will be autoincremented.
 ```SQL
 INSERT INTO new.game (Name) 
 SELECT 
@@ -161,13 +162,13 @@ GROUP BY
   city;
 ```
 
-Once that is done, we done all the simpliest part ! Now it's getting more tricky.\
-We have to migrate data into table that use foreign keys, and so insert data from multiple tables into one new table.
+Once that is done, we have done all the simplest part! Now it's getting more tricky.\
+We have to migrate data into a table that uses foreign keys, and so insert data from multiple tables into one new table.
 
-A simple one is the new `staff` table.\
-We only need to insert the `IdEmployee` from the new `employee_data` table into it. But we need to make sure the ID whe are inserting is part of the staff people ! So we need to compare the informations that we already had from the old `staff` table between the new `employee_data`table.\
-To do that we will compare all the informations that we have about one person, so we make sure we are inserting the right person into the `staff` table.\
-We can imagine that it is possible that there is more than one person with the same name and lastname, even if the odds are low, it is still possible, that's why we compare with all the data we have.
+A simple one is on the new `staff` table.\
+We only need to insert the `IdEmployee` from the new `employee_data` table into it. But we need to make sure the ID we are inserting is part of the staff people ! So we need to compare the information that we already had from the old `staff` table between the new `employee_data`table.\
+To do that we will compare all the information that we have about one person, so we make sure we are inserting the right person into the `staff` table.\
+We can imagine that it is possible that there is more than one person with the same name and last name, even if the odds are low, it is still possible, that's why we compare with all the data we have.
 ```SQL
 INSERT INTO new.staff (IdEmployeeData) 
 SELECT 
@@ -183,11 +184,11 @@ WHERE
   AND new.employee_data.Wage = old.staff.wage;
 ```
 
-It will be the exact same process for the `player` and `coach` table as they look alike, the only difference is some columns, for example in the `player` table we need to retrieve the `IdGame` that was already into the old database, we kept the same order for the `game` table so we don't need to retrieve the ID into our new `game` table because the ID is already in the old `player` table.
+It will be the exact same process for the `player` and `coach` table as they look alike, the only difference is between some columns. For example in the `player` table, we need to retrieve the `IdGame` that was already in the old database, we kept the same order for the `game` table so we don't need to retrieve the ID into our new `game` table because the ID is already in the old `player` table.
 
 So for the last one, this one is a little bit different but the logic is the same.\
-We need to insert the `IdPlace`, `IdGame`, `date` and `duration`. Our problem is that we can retrieve all this data from the old `tournament` table, except the `IdPlace` !\
-That's why we also retrieve data from the new `place` table, and to make sure that we are inserting the right value, we compare every value we have about the place. In our case we compare the name of the place, the address and the city. This is necessary because it can be possible that 2 differents place have the same name, but not the same address for example.
+We need to insert the `IdPlace`, `IdGame`, `date` and `duration`. Our problem is that we can retrieve all this data from the old `tournament` table, except the `IdPlace`!\
+That's why we also retrieve data from the new `place` table, and to make sure that we are inserting the right value, we compare every value we have about the place. In our case, we compare the name of the place, the address and the city. This is necessary because it can be possible that 2 different places have the same name, but not the same address for example.
 ```SQL
 INSERT INTO new.tournament (IdPlace, IdGame, Date, Duration) 
 SELECT 
@@ -208,10 +209,10 @@ And at the end of the script, we close the transaction with the `COMMIT` command
 
 ### Python script
 
-This Python script use the `sqlite3` library.\
+This Python script uses the `sqlite3` library.\
 We use it to demonstrate that the new database is fully functional.
 
-In the `main` function, we juste create a connection to our database and create a context by creating a cursor on the database. This context will be provided to functions that need to execute a request in the database.
+In the `main` function, we just create a connection to our database and create a context by creating a cursor on the database. This context will be provided to functions that need to execute a request in the database.
 ```python
 def main():
     connection = sqlite3.connect("newdb.db")
@@ -330,7 +331,7 @@ ORDER BY place.IdPlace
 
 Here is the output\
 ![list all tournaments by place alt output](https://user-images.githubusercontent.com/59230262/214966348-ca4c7615-11c7-461f-a6f8-0eff899ec3c9.png)\
-We didn't used this one because it was not possible to print the output like we did with the loop on tournaments.
+We didn't use this one because it was not possible to print the output like we did with the loop on tournaments.
 
 #### Get the number of players by gender
 To get the number of players by gender, we run the `print_number_of_players_by_gender` function.\
