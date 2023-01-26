@@ -1,6 +1,22 @@
 # Projet SQL B2
 This repo is the final project of a SQL course.
 
+## Summary
+
+- [Subject](#subject)
+- [Why did it have to be changed ?](#why-did-it-have-to-be-changed)
+- [How to run](#how-to-run)
+    - [Migration](#migration)
+    - [Python script](#python-script)
+- [Explanations](#explanations)
+    - [Initialization script](#initialization-script)
+    - [Migration script](#migration-script)
+    - [Python script](#python-script-1)
+        - [List every tournament for a given game name](#list-every-tournament-for-a-given-game-name)
+        - [Given a game name, retrieve the average wage of the players](#given-a-game-name-retrieve-the-average-wage-of-the-players)
+        - [List all tournaments by place](#list-all-tournaments-by-place)
+        - [Get the number of players by gender](#get-the-number-of-players-by-gender)
+    
 ## Subject
 
 The given subject was:
@@ -25,7 +41,7 @@ Here is the new schema
 
 ![New schema](https://user-images.githubusercontent.com/59230262/214812633-c1254f12-c400-4ba9-b3b0-30038e7dcca8.png)
 
-## Why did it have to be changed ?
+## Why did it have to be changed
 
 The old database schema wasn't well structured.\
 For example, the `tournament` table contains information about the place where it is happening, but this information isn't related to a tournament, it relates to a place, that's why we created a new `place` table in the new schema.
@@ -39,7 +55,7 @@ Another use of foreign keys which was not possible with the old schema, in the n
 ## How to run
 
 ###  Migration
-You need to have sqlite3 installed.
+You need to have [sqlite3](https://www.sqlite.org/download.html) installed.
 
 In the same directory of the old database, in a terminal run this command to create an empty database\
 ```sqlite3 newdb.db "VACUUM;"```
@@ -51,7 +67,7 @@ And then run this command to migrate data from the old database to the new one\
 ```sqlite3 tpb2.db < migrate.sql```
 
 ### Python script
-You need to have Python installed.
+You need to have [Python](https://www.python.org/downloads/) installed.
 
 Run this command to launch the script\
 ```python main.py```\
