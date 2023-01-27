@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS "employee_data"
     Lastname VARCHAR2(30),
     Firstname VARCHAR2(30),
     Gender VARCHAR2(30),
-    Age INT,
-    Wage INT
+    Age INTEGER,
+    Wage INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS "staff"
