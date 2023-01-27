@@ -136,7 +136,7 @@ ATTACH DATABASE 'tpb2.db' AS old;
 ATTACH DATABASE 'newdb.db' AS new;
 ```
 
-Now we can start the migration. We should keep in mind that the order is very important here! That's why we migrate data into tables that don't need foreign key.\
+Now we can start the migration. We should keep in mind that the order is very important here! That's why we migrate data into tables that don't need foreign key in a first place.\
 So we start by inserting data into the `employee_data` table.
 ```SQL
 INSERT INTO new.employee_data (Lastname, Firstname, Gender, Age, Wage) 
